@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zego_project/views/auth/login.dart';
+import 'package:zego_project/views/chat_list.dart';
+import 'package:zego_project/views/home/homepage.dart';
 import 'package:zego_project/views/search/search.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +51,27 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: index,
+          onTap: (i) {
+            setState(() {
+              index = i;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+            BottomNavigationBarItem(icon: Icon(Icons.live_tv), label: 'Live')
+          ]),
+      body: SafeArea(
+          child: IndexedStack(
+        index: index,
+        children: [
+          Home(),
+          ChatList(),
+          Container(),
+        ],
+      )),
     );
   }
 }

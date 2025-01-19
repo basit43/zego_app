@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -50,6 +49,24 @@ class _SearchPageState extends State<SearchPage> {
                             DocumentSnapshot doc = snapshot.data!.docs[index];
                             return ListTile(
                                 title: Text(doc['username']),
+                                leading: InkWell(
+                                    onTap: () async {
+                                      QuerySnapshot snapshot = await FirebaseFirestore.instance
+                                          .collection('chats')
+                                          .where('users', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+                                          .get();
+                                      if (snapshot.docs.isEmpty) {
+                                        print('No Doc');
+                                        var data = {
+                                          'users': [FirebaseAuth.instance.currentUser!.uid, doc.id],
+                                          'recent_text': 'Hi',
+                                        };
+                                        await FirebaseFirestore.instance.collection('chats').add(data);
+                                      } else {
+                                        print('Yes Doc');
+                                      }
+                                    },
+                                    child: Icon(Icons.chat)),
                                 trailing: FutureBuilder(
                                     future:
                                         doc.reference.collection('followers').doc(FirebaseAuth.instance.currentUser!.uid).get(),

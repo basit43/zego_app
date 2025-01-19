@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:zego_project/views/auth/signup.dart';
 import 'package:zego_project/views/home/home.dart';
