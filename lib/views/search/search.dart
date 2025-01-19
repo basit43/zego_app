@@ -82,7 +82,7 @@ class _SearchPageState extends State<SearchPage> {
                                         }
                                       }
                                       // Handle error or unexpected state
-                                      return const Text('Error loading data');
+                                      return const Text('Error loading data!!');
                                     }));
                           },
                         ),
