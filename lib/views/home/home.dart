@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_project/views/auth/login.dart';
 import 'package:zego_project/views/chat_list.dart';
 import 'package:zego_project/views/home/homepage.dart';
+import 'package:zego_project/views/live.dart';
 import 'package:zego_project/views/search/search.dart';
 
 class HomePage extends StatefulWidget {
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Home(),
           ChatList(),
-          Container(),
+          LivePage(),
         ],
       )),
     );
