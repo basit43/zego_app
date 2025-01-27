@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
@@ -23,17 +22,55 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           Expanded(
             child: StreamBuilder(
-              stream: widget.doc.reference.collection('messages').snapshots(),
+              stream: widget.doc.reference.collection('messages').orderBy('time').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data?.docs.isEmpty ?? true) {
                     return Text('No Messages yet !!');
                   }
                   return ListView.builder(
+                    padding: EdgeInsets.all(12.0),
                     itemCount: snapshot.data?.docs.length ?? 0,
                     itemBuilder: (context, index) {
                       DocumentSnapshot msg = snapshot.data!.docs[index];
-                      return Text('lll');
+                      if (msg['uid'] == FirebaseAuth.instance.currentUser!.uid) {
+                        // my message
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              margin: EdgeInsets.only(bottom: 8.0),
+                              decoration: BoxDecoration(color: Colors.indigo.shade50),
+                              padding: EdgeInsets.all(4.0),
+                              child: Text(
+                                msg['message'].toString(),
+                                textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        // not my message
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              margin: EdgeInsets.only(bottom: 8.0),
+                              decoration: BoxDecoration(color: Colors.yellow.shade50),
+                              padding: EdgeInsets.all(4.0),
+                              child: Text(
+                                msg['message'].toString(),
+                                textAlign: TextAlign.left,
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return null;
                     },
                   );
                 } else {
@@ -52,12 +89,13 @@ class _ChatPageState extends State<ChatPage> {
                   decoration: InputDecoration(label: Text('Your Message')),
                 )),
                 ElevatedButton(
-                    onPressed: () {
-                      widget.doc.reference.collection('messages').add({
+                    onPressed: () async {
+                      await widget.doc.reference.collection('messages').add({
                         'time': DateTime.now(),
                         'uid': FirebaseAuth.instance.currentUser!.uid,
                         'message': _messageController.text.trim(),
                       });
+                      _messageController.text = '';
                     },
                     child: Text('Send'))
               ],
