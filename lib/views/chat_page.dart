@@ -67,6 +67,7 @@ class _ChatPageState extends State<ChatPage> {
                                 style: TextStyle(fontSize: 16.0),
                               ),
                             ),
+                            Text('This is the free Container')
                           ],
                         );
                       }
